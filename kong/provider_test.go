@@ -8,11 +8,11 @@ import (
 	terraformconfig "github.com/hashicorp/terraform/config"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
-	"github.com/kevholditch/gokong"
-	"github.com/kevholditch/gokong/containers"
+	"github.com/nghnam/gokong"
+	"github.com/nghnam/gokong/containers"
 )
 
-const defaultKongVersion = "1.0.2"
+const defaultKongVersion = "1.2.0"
 
 var testAccProviders map[string]terraform.ResourceProvider
 var testAccProvider *schema.Provider

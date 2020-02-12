@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/kevholditch/gokong"
+	"github.com/nghnam/gokong"
 )
 
 func resourceKongTarget() *schema.Resource {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/kevholditch/gokong"
+	"github.com/nghnam/gokong"
 )
 
 func resourceKongRoute() *schema.Resource {
@@ -46,6 +46,12 @@ func resourceKongRoute() *schema.Resource {
 				Optional: true,
 				ForceNew: false,
 				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
+			"https_redirect_status_code": &schema.Schema{
+				Type:     schema.TypeInt,
+				Optional: true,
+				ForceNew: false,
+				Default:  426,
 			},
 			"strip_path": &schema.Schema{
 				Type:     schema.TypeBool,
@@ -170,6 +176,10 @@ func resourceKongRouteRead(d *schema.ResourceData, meta interface{}) error {
 			d.Set("paths", gokong.StringValueSlice(route.Paths))
 		}
 
+		if route.HTTPSRedirectStatusCode != nil {
+			d.Set("https_redirect_status_code", route.HTTPSRedirectStatusCode)
+		}
+
 		if route.StripPath != nil {
 			d.Set("strip_path", route.StripPath)
 		}
@@ -216,17 +226,18 @@ func resourceKongRouteDelete(d *schema.ResourceData, meta interface{}) error {
 
 func createKongRouteRequestFromResourceData(d *schema.ResourceData) *gokong.RouteRequest {
 	return &gokong.RouteRequest{
-		Name:          readStringPtrFromResource(d, "name"),
-		Protocols:     readStringArrayPtrFromResource(d, "protocols"),
-		Methods:       readStringArrayPtrFromResource(d, "methods"),
-		Hosts:         readStringArrayPtrFromResource(d, "hosts"),
-		Paths:         readStringArrayPtrFromResource(d, "paths"),
-		StripPath:     readBoolPtrFromResource(d, "strip_path"),
-		Sources:       readIpPortArrayFromResource(d, "source"),
-		Destinations:  readIpPortArrayFromResource(d, "destination"),
-		PreserveHost:  readBoolPtrFromResource(d, "preserve_host"),
-		RegexPriority: readIntPtrFromResource(d, "regex_priority"),
-		Snis:          readStringArrayPtrFromResource(d, "snis"),
-		Service:       readIdPtrFromResource(d, "service_id"),
+		Name:                    readStringPtrFromResource(d, "name"),
+		Protocols:               readStringArrayPtrFromResource(d, "protocols"),
+		Methods:                 readStringArrayPtrFromResource(d, "methods"),
+		Hosts:                   readStringArrayPtrFromResource(d, "hosts"),
+		Paths:                   readStringArrayPtrFromResource(d, "paths"),
+		HTTPSRedirectStatusCode: readIntPtrFromResource(d, "https_redirect_status_code"),
+		StripPath:               readBoolPtrFromResource(d, "strip_path"),
+		Sources:                 readIpPortArrayFromResource(d, "source"),
+		Destinations:            readIpPortArrayFromResource(d, "destination"),
+		PreserveHost:            readBoolPtrFromResource(d, "preserve_host"),
+		RegexPriority:           readIntPtrFromResource(d, "regex_priority"),
+		Snis:                    readStringArrayPtrFromResource(d, "snis"),
+		Service:                 readIdPtrFromResource(d, "service_id"),
 	}
 }
